@@ -1,0 +1,33 @@
+## .NET / ASP.NET Core
+
+# Build outputs
+bin/
+obj/
+
+# NuGet
+*.nupkg
+*.snupkg
+.nuget/
+
+# VS user files
+*.user
+*.suo
+.vs/
+
+# Serilog log dosyaları
+logs/
+
+# SQLite artık kullanılmıyor ama eski dosyalar izlenmesin
+*.db
+*.db-shm
+*.db-wal
+
+# Üretilmiş analiz/cache dosyalar
+nuget_*.json
+
+# Build log
+build.log
+
+# OS files
+.DS_Store
+Thumbs.db

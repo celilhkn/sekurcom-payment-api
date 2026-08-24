@@ -1,0 +1,35 @@
+@Sekurcom_HostAddress = https://localhost:7285
+
+POST {{Sekurcom_HostAddress}}/api/payment/pay
+Content-Type: application/json
+
+{
+  "cardHolderName": "Test Kullanici",
+  "cardNumber": "4111111111111111",
+  "expireMonth": "12",
+  "expireYear": "28",
+  "cvv": "123",
+  "amount": 100.50
+}
+
+###
+
+POST {{Sekurcom_HostAddress}}/api/payment/success
+
+###
+POST https://localhost:5222/api/Payment/success
+Content-Type: application/x-www-form-urlencoded
+
+oid=TEST-Siparis-1234&AuthCode=777888&HASH=OrnekHashDegeri
+POST {{Sekurcom_HostAddress}}/api/payment/success
+
+###
+POST https://localhost:7285/api/Payment/success
+Content-Type: application/x-www-form-urlencoded
+
+oid=TEST-Siparis-1234&AuthCode=777888&HASH=OrnekHashDegeri
+POST {{Sekurcom_HostAddress}}/api/Payment/success
+
+POST {{Sekurcom_HostAddress}}/api/payment/success
+
+###

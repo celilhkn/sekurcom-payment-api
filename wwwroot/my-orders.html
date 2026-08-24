@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sekurcom - My Orders</title>
+    <style>
+        :root {
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #0f172a;
+            --text-secondary: #475569;
+            --accent-color: #0f172a; 
+            --accent-hover: #1e293b;
+            --border-color: #e2e8f0;
+            --success-color: #15803d;
+            --success-bg: #dcfce7;
+            --danger-color: #b91c1c;
+            --danger-bg: #fee2e2;
+            --warning-color: #b45309;
+            --warning-bg: #fef3c7;
+            --shadow-premium: 0 4px 20px -2px rgba(15, 23, 42, 0.05);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            min-height: 100vh;
+        }
+
+        /* HEADER */
+        .site-header {
+            background-color: #ffffff;
+            border-bottom: 1px solid var(--border-color);
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo { font-size: 24px; font-weight: 800; color: var(--accent-color); text-decoration: none; }
+        
+        .header-actions { display: flex; gap: 16px; }
+        .action-link { font-size: 14px; font-weight: 500; color: var(--text-secondary); text-decoration: none; display: flex; align-items: center; gap: 8px; }
+        .action-link:hover { color: var(--accent-color); }
+
+        /* MAIN CONTENT */
+        .main-content {
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .header h1 { font-size: 24px; font-weight: 700; }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: var(--shadow-premium);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            overflow: hidden;
+        }
+
+        .table-responsive { width: 100%; overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; text-align: left; }
+        th, td { padding: 16px 24px; border-bottom: 1px solid var(--border-color); }
+        th { background-color: #f8fafc; color: var(--text-secondary); font-size: 12px; font-weight: 600; text-transform: uppercase; }
+        td { font-size: 14px; color: var(--text-main); }
+        tr:last-child td { border-bottom: none; }
+        tr:hover td { background-color: #f8fafc; transition: background-color 0.15s ease; }
+
+        .order-id { font-family: monospace; color: var(--text-secondary); font-size: 13px; }
+        .amount { font-weight: 600; }
+
+        /* BADGES */
+        .badge { display: inline-block; padding: 4px 12px; border-radius: 9999px; font-size: 12px; font-weight: 600; }
+        .badge.success { background-color: var(--success-bg); color: var(--success-color); }
+        .badge.failed { background-color: var(--danger-bg); color: var(--danger-color); }
+        .badge.pending { background-color: var(--warning-bg); color: var(--warning-color); }
+        .badge.refunded { background-color: #e5e7eb; color: #4b5563; }
+
+        .loading, .error { padding: 40px; text-align: center; color: var(--text-secondary); }
+        .error { color: var(--danger-color); }
+
+        /* MODAL */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.4); backdrop-filter: blur(4px); z-index: 1000; justify-content: center; align-items: center; }
+        .modal { background: var(--card-bg); border-radius: 14px; width: 100%; max-width: 600px; max-height: 90vh; overflow-y: auto; box-shadow: var(--shadow-premium); border: 1px solid rgba(226, 232, 240, 0.8); }
+        .modal-header { padding: 20px 24px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; background: var(--card-bg); z-index: 10; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+        .modal-header h2 { font-size: 18px; font-weight: 600; }
+        .modal-close { background: none; border: none; cursor: pointer; color: var(--text-secondary); }
+        .modal-close:hover { color: var(--text-main); }
+        .modal-body { padding: 24px; }
+        .detail-group { margin-bottom: 24px; }
+        .detail-group h3 { font-size: 14px; color: var(--text-secondary); margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.05em; }
+        .detail-row { display: flex; margin-bottom: 8px; font-size: 14px; }
+        .detail-label { width: 140px; font-weight: 600; color: var(--text-main); }
+        .detail-value { flex: 1; color: var(--text-secondary); }
+        .clickable-row { cursor: pointer; transition: background-color 0.15s ease; }
+
+        .action-link { font-size: 14px; font-weight: 500; color: var(--text-secondary); text-decoration: none; display: flex; align-items: center; gap: 8px; transition: color 0.15s ease; }
+
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    </style>
+</head>
+<body>
+
+    <header class="site-header">
+        <a href="/store.html" class="logo">Sekurcom</a>
+        <div class="header-actions">
+            <a href="/store.html" class="action-link">Back to Store</a>
+            <a href="#" class="action-link" id="btnLogout">Sign Out</a>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="header">
+            <div style="display: flex; align-items: center; gap: 20px;">
+                <a href="/store.html" style="color: var(--text-secondary); text-decoration: none; display: flex; align-items: center; gap: 5px; font-size: 14px; font-weight: 500; padding: 8px 12px; border: 1px solid var(--border-color); border-radius: 6px; transition: all 0.2s;" onmouseover="this.style.backgroundColor='white'; this.style.color='var(--accent-color)'" onmouseout="this.style.backgroundColor='transparent'; this.style.color='var(--text-secondary)'">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="19" y1="12" x2="5" y2="12"></line>
+                        <polyline points="12 19 5 12 12 5"></polyline>
+                    </svg>
+                    Back
+                </a>
+                <h1 style="margin: 0;">My Orders</h1>
+            </div>
+            <div id="userInfo" style="color: var(--text-secondary); font-size: 14px;">Loading...</div>
+        </div>
+
+        <div class="card">
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Order ID</th>
+                            <th>Amount</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="paymentsTableBody">
+                        <tr>
+                            <td colspan="4" class="loading">Loading your orders...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <!-- TRANSACTION DETAIL MODAL -->
+    <div class="modal-overlay" id="detailModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>Order Details</h2>
+                <button class="modal-close" onclick="closeModal()">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="detail-group">
+                    <h3>General Info</h3>
+                    <div class="detail-row"><span class="detail-label">Order ID:</span><span class="detail-value" id="modalOrderId"></span></div>
+                    <div class="detail-row"><span class="detail-label">Date:</span><span class="detail-value" id="modalDate"></span></div>
+                    <div class="detail-row"><span class="detail-label">Status:</span><span class="detail-value" id="modalStatus"></span></div>
+                    <div class="detail-row"><span class="detail-label">Amount:</span><span class="detail-value" id="modalAmount"></span></div>
+                </div>
+
+                <div class="detail-group">
+                    <h3>Delivery Address</h3>
+                    <div class="detail-row"><span class="detail-label">Full Name:</span><span class="detail-value" id="modalCustomerName"></span></div>
+                    <div class="detail-row"><span class="detail-label">Address:</span><span class="detail-value" id="modalCustomerAddress"></span></div>
+                </div>
+
+                <div class="detail-group">
+                    <h3>Purchased Items</h3>
+                    <div class="table-responsive" style="border: 1px solid var(--border-color); border-radius: 8px;">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Product Name</th>
+                                    <th>Qty</th>
+                                    <th>Price</th>
+                                </tr>
+                            </thead>
+                            <tbody id="modalProductsTable">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <div class="detail-group" id="modalActions" style="display: none; border-top: 1px solid var(--border-color); padding-top: 16px; margin-top: 16px;">
+                    <button id="btnCancelOrder" style="background-color: var(--danger-color); color: white; padding: 10px 16px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; width: 100%;">Cancel Order (İptal Et)</button>
+                    <button id="btnRefundOrder" style="background-color: var(--warning-color); color: white; padding: 10px 16px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; width: 100%; display: none;">Request Refund (İade Et)</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const token = localStorage.getItem('token');
+        if (!token) {
+            window.location.href = '/login.html';
+        }
+
+        try {
+            const payloadBase64 = token.split('.')[1];
+            const base64 = payloadBase64.replace(/-/g, '+').replace(/_/g, '/');
+            const payload = JSON.parse(decodeURIComponent(atob(base64).split('').map(function(c) {
+                return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+            }).join('')));
+            const email = payload['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress'] || payload.email || 'Kullanıcı';
+            document.getElementById('userInfo').textContent = email;
+        } catch (e) {
+            localStorage.removeItem('token');
+            window.location.href = '/login.html';
+        }
+
+        document.getElementById('btnLogout').addEventListener('click', (e) => {
+            e.preventDefault();
+            localStorage.removeItem('token');
+            window.location.href = '/login.html';
+        });
+
+        let allPayments = [];
+
+        function openModal(orderId) {
+            const payment = allPayments.find(p => p.orderId === orderId);
+            if (!payment) return;
+
+            document.getElementById('modalOrderId').textContent = payment.orderId;
+            document.getElementById('modalDate').textContent = new Date(payment.createdAt).toLocaleString('en-US');
+            
+            let statusText = 'Pending';
+            if (payment.status === 'Successful') statusText = 'Successful';
+            if (payment.status === 'Failed') statusText = 'Failed';
+            if (payment.status === 'Refunded') statusText = 'Refunded';
+            if (payment.status === 'Cancelled') statusText = 'Cancelled';
+            document.getElementById('modalStatus').textContent = statusText;
+            document.getElementById('modalAmount').textContent = '$' + payment.amount.toLocaleString('en-US', { minimumFractionDigits: 2 });
+
+            document.getElementById('modalCustomerName').textContent = payment.customerName || '-';
+            document.getElementById('modalCustomerAddress').textContent = payment.customerAddress || '-';
+
+            const productsTbody = document.getElementById('modalProductsTable');
+            try {
+                const items = JSON.parse(payment.purchasedItems);
+                if (items && items.length > 0) {
+                    productsTbody.innerHTML = items.map(item => `
+                        <tr>
+                            <td>${item.name}</td>
+                            <td>${item.quantity || 1}</td>
+                            <td>$${(item.price * (item.quantity || 1)).toLocaleString('en-US', { minimumFractionDigits: 2 })}</td>
+                        </tr>
+                    `).join('');
+                } else {
+                    productsTbody.innerHTML = '<tr><td colspan="3">No product details found.</td></tr>';
+                }
+            } catch (e) {
+                productsTbody.innerHTML = '<tr><td colspan="3">No product details found.</td></tr>';
+            }
+
+            // Handle actions visibility
+            const actionsDiv = document.getElementById('modalActions');
+            const btnCancel = document.getElementById('btnCancelOrder');
+            const btnRefund = document.getElementById('btnRefundOrder');
+            
+            btnCancel.style.display = 'none';
+            btnRefund.style.display = 'none';
+            actionsDiv.style.display = 'none';
+            
+            if (payment.status === 'Successful') {
+                actionsDiv.style.display = 'block';
+                const createdDate = new Date(payment.createdAt);
+                const diffTime = Math.abs(new Date() - createdDate);
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
+                
+                if (diffDays >= 3) {
+                    btnRefund.style.display = 'block';
+                    btnRefund.onclick = () => refundOrder(payment.orderId);
+                } else {
+                    btnCancel.style.display = 'block';
+                    btnCancel.onclick = () => cancelOrder(payment.orderId);
+                }
+            }
+
+            document.getElementById('detailModal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('detailModal').style.display = 'none';
+        }
+
+        async function cancelOrder(orderId) {
+            if(!confirm('Are you sure you want to cancel this order?')) return;
+            try {
+                const response = await fetch('/api/payment/cancel/' + orderId, {
+                    method: 'POST',
+                    headers: { 'Authorization': 'Bearer ' + token }
+                });
+                if (response.ok) {
+                    alert('Order cancelled successfully.');
+                    closeModal();
+                    loadMyOrders();
+                } else {
+                    const text = await response.text();
+                    alert('Cancel failed: ' + text);
+                }
+            } catch (e) {
+                alert('Error: ' + e.message);
+            }
+        }
+
+        async function refundOrder(orderId) {
+            if(!confirm('Are you sure you want to request a refund for this order?')) return;
+            try {
+                const response = await fetch('/api/payment/refund/' + orderId, {
+                    method: 'POST',
+                    headers: { 'Authorization': 'Bearer ' + token }
+                });
+                if (response.ok) {
+                    alert('Refund processed successfully.');
+                    closeModal();
+                    loadMyOrders();
+                } else {
+                    const text = await response.text();
+                    alert('Refund failed: ' + text);
+                }
+            } catch (e) {
+                alert('Error: ' + e.message);
+            }
+        }
+
+        document.getElementById('detailModal').addEventListener('click', (e) => {
+            if (e.target.id === 'detailModal') closeModal();
+        });
+
+        async function loadMyOrders() {
+            const tbody = document.getElementById('paymentsTableBody');
+            try {
+                const response = await fetch('/api/payment/my-orders', {
+                    headers: { 'Authorization': 'Bearer ' + token }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to load your orders.');
+                }
+
+                let payments = await response.json();
+                allPayments = payments;
+                
+                if (payments.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="4" class="loading">You have no orders yet.</td></tr>';
+                    return;
+                }
+
+                tbody.innerHTML = payments.map(p => {
+                    const date = new Date(p.createdAt).toLocaleString('en-US');
+                    
+                    let statusBadge = 'badge pending';
+                    let statusText = 'Pending';
+                    if (p.status === 'Successful') { statusBadge = 'badge success'; statusText = 'Successful'; }
+                    else if (p.status === 'Failed') { statusBadge = 'badge failed'; statusText = 'Failed'; }
+                    else if (p.status === 'Refunded') { statusBadge = 'badge refunded'; statusText = 'Refunded'; }
+                    else if (p.status === 'Pending3D') { statusBadge = 'badge pending'; statusText = '3D Pending'; }
+
+                    return `
+                        <tr class="clickable-row" onclick="openModal('${p.orderId}')">
+                            <td>${date}</td>
+                            <td class="order-id">${p.orderId.substring(0, 8)}...</td>
+                            <td class="amount">$${p.amount.toLocaleString('en-US', { minimumFractionDigits: 2 })}</td>
+                            <td><span class="${statusBadge}">${statusText}</span></td>
+                        </tr>
+                    `;
+                }).join('');
+
+            } catch (err) {
+                tbody.innerHTML = `<tr><td colspan="4" class="error">${err.message}</td></tr>`;
+            }
+        }
+
+        loadMyOrders();
+    </script>
+</body>
+</html>

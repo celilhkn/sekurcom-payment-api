@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Failed</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .container { background: white; padding: 40px; border-radius: 14px; box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 10px 25px rgba(0,0,0,0.05); max-width: 400px; width: 100%; text-align: center; animation: fadeInUp 0.4s ease-out; }
+        .icon { color: #ef4444; margin-bottom: 20px; }
+        h1 { color: #0f172a; margin: 0 0 10px 0; font-size: 24px; }
+        p { color: #64748b; margin-bottom: 25px; line-height: 1.5; }
+        .details { background: #fef2f2; padding: 20px; border-radius: 10px; margin-bottom: 30px; text-align: left; border: 1px solid #fee2e2; }
+        .details div { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 14px; }
+        .details div:last-child { margin-bottom: 0; }
+        .label { color: #991b1b; font-weight: 500; }
+        .value { color: #7f1d1d; font-weight: 600; text-align: right; }
+        .btn { display: inline-block; background: #0f172a; color: white; text-decoration: none; padding: 12px 24px; border-radius: 6px; font-weight: 600; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); }
+        .btn:hover { background: #1e293b; }
+        .btn:active { transform: scale(0.97); }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <svg class="icon" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="15" y1="9" x2="9" y2="15"></line>
+            <line x1="9" y1="9" x2="15" y2="15"></line>
+        </svg>
+        <h1>Payment Failed</h1>
+        <p>Your transaction could not be approved due to bank or security policies. Please check your information and try again.</p>
+        
+        <div class="details">
+            <div>
+                <span class="label">Order No</span>
+                <span class="value" id="orderId">-</span>
+            </div>
+            <div style="flex-direction: column; gap: 5px; margin-top:10px;">
+                <span class="label">Error Reason</span>
+                <span class="value" id="errorMessage" style="text-align: left;">-</span>
+            </div>
+        </div>
+
+        <a href="/store.html" class="btn">Try Again</a>
+    </div>
+
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        document.getElementById('orderId').textContent = params.get('orderId') || '-';
+        document.getElementById('errorMessage').textContent = params.get('errorMessage') || 'Unknown Error';
+    </script>
+</body>
+</html>

@@ -1,0 +1,1251 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure Payment Gateway</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0f172a;
+            --primary-hover: #1e293b;
+            --ziraat-red: #E1001A;
+            --ziraat-red-hover: #b80015;
+            --cyan: #00a8b3;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --bg-body: #f8fafc;
+            --bg-card: #ffffff;
+            --border-color: #e2e8f0;
+            --shadow-premium: 0 4px 20px -2px rgba(15, 23, 42, 0.05);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* --- 1. E-TİCARET GİRİŞ EKRANI (PROFESYONEL) --- */
+        #loginScreen {
+            display: flex;
+            width: 100%;
+            max-width: 900px;
+            background: var(--bg-card);
+            border-radius: 12px;
+            box-shadow: var(--shadow-premium);
+            overflow: hidden;
+            min-height: 500px;
+            border: 1px solid rgba(226, 232, 240, 0.8);
+        }
+
+        .login-left {
+            flex: 1;
+            background: #0f172a;
+            color: white;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+        }
+
+        .login-left::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80') center/cover;
+            opacity: 0.25;
+            mix-blend-mode: overlay;
+        }
+
+        .brand {
+            position: relative;
+            z-index: 1;
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: -1px;
+        }
+
+        .login-left-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .login-left-content h2 {
+            font-size: 26px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            line-height: 1.3;
+            letter-spacing: -0.5px;
+        }
+
+        .login-left-content p {
+            color: #94a3b8;
+            font-size: 15px;
+            line-height: 1.6;
+        }
+
+        .login-right {
+            flex: 1;
+            padding: 50px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .login-right h3 {
+            font-size: 24px;
+            margin-bottom: 6px;
+            color: var(--text-main);
+            font-weight: 600;
+        }
+
+        .login-right p.subtitle {
+            color: var(--text-muted);
+            font-size: 14px;
+            margin-bottom: 30px;
+        }
+
+        .modern-input-group {
+            margin-bottom: 20px;
+        }
+
+        .modern-input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 13px;
+            font-weight: 500;
+            color: #475569;
+        }
+
+        .modern-input-group input {
+            width: 100%;
+            padding: 12px 16px;
+            background-color: #fff;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.04);
+            font-size: 14px;
+            transition: all 0.2s ease;
+            color: var(--text-main);
+        }
+
+        .modern-input-group input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.08), inset 0 1px 2px rgba(0,0,0,0.04);
+        }
+
+        .forgot-password {
+            text-align: right;
+            margin-top: -10px;
+            margin-bottom: 25px;
+        }
+
+        .forgot-password a {
+            color: var(--primary);
+            font-size: 13px;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .forgot-password a:hover {
+            text-decoration: underline;
+        }
+
+        .social-login {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            margin-top: 20px;
+        }
+
+        .btn-social {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 10px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            background: white;
+            color: #334155;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-social:hover {
+            background: #f8fafc;
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            margin-bottom: 20px;
+            color: #94a3b8;
+            font-size: 13px;
+        }
+
+        .divider::before, .divider::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .divider::before { margin-right: 15px; }
+        .divider::after { margin-left: 15px; }
+
+        .signup-fields {
+            display: none;
+        }
+
+        .password-strength {
+            height: 4px;
+            background: #e2e8f0;
+            border-radius: 2px;
+            margin-top: 8px;
+            overflow: hidden;
+            display: none;
+        }
+
+        .password-strength-bar {
+            height: 100%;
+            width: 0;
+            transition: all 0.3s ease;
+        }
+        
+        .strength-text {
+            font-size: 11px;
+            margin-top: 4px;
+            text-align: right;
+            display: none;
+            font-weight: 500;
+        }
+
+        .btn-modern {
+            width: 100%;
+            background-color: var(--text-main);
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .btn-modern:hover {
+            background-color: #0f172a;
+        }
+
+        .btn-modern:active {
+            transform: scale(0.98);
+        }
+
+        /* --- 2. ZİRAAT BANKASI POS EKRANI --- */
+        #posScreen {
+            display: none;
+            width: 100%;
+            max-width: 480px;
+            background: var(--bg-card);
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 10px 25px rgba(0,0,0,0.06);
+            overflow: hidden;
+            animation: slideUp 0.3s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .ziraat-header {
+            background-color: var(--ziraat-red);
+            padding: 20px;
+            text-align: center;
+        }
+
+        .ziraat-header h1 {
+            color: white;
+            font-size: 18px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin: 0;
+        }
+
+        .pos-body {
+            padding: 30px;
+        }
+
+        .merchant-info {
+            text-align: center;
+            margin-bottom: 20px;
+            color: var(--text-muted);
+            font-size: 13px;
+        }
+
+        .merchant-info strong {
+            display: block;
+            color: var(--text-main);
+            font-size: 16px;
+            margin-top: 4px;
+        }
+
+        .amount-display {
+            background: #fafafa;
+            border: 1px solid #e5e5e5;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .amount-display span {
+            color: #555;
+            font-size: 12px;
+            font-weight: 500;
+            text-transform: uppercase;
+        }
+
+        .amount-display .price {
+            display: block;
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-top: 5px;
+        }
+
+        .card-row {
+            display: flex;
+            gap: 15px;
+        }
+
+        .card-col {
+            flex: 1;
+        }
+
+        .btn-pay {
+            width: 100%;
+            background-color: var(--ziraat-red);
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 6px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .btn-pay:hover {
+            background-color: var(--ziraat-red-hover);
+        }
+
+        .btn-pay:active {
+            transform: scale(0.98);
+        }
+
+        .secure-footer {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .secure-footer span {
+            font-size: 11px;
+            font-weight: 600;
+            color: #94a3b8;
+        }
+
+        /* --- 3. 3D SECURE EKRANI (Birebir Tasarım) --- */
+        #threeDSecureModal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #e5e5e5;
+            /* Arka plan gri */
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .threed-content {
+            background: white;
+            width: 100%;
+            height: 100%;
+            max-width: 400px;
+            max-height: 800px;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .threed-topbar {
+            display: flex;
+            align-items: center;
+            padding: 15px 20px;
+            border-bottom: 1px solid #eee;
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .threed-topbar svg {
+            margin-right: 15px;
+            cursor: pointer;
+        }
+
+        .ssl-lock {
+            margin-left: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 9px;
+            color: #00a859;
+            font-weight: bold;
+        }
+
+        .threed-logos {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+        }
+
+        .logo-guvenli {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: var(--cyan);
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .logo-ziraat {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+            font-size: 16px;
+            color: #333;
+        }
+
+        .threed-body {
+            padding: 0 20px 30px 20px;
+            flex: 1;
+        }
+
+        .threed-body h2 {
+            text-align: center;
+            font-size: 18px;
+            color: #333;
+            margin: 10px 0 20px 0;
+            font-weight: 600;
+        }
+
+        .threed-table {
+            border-top: 1px solid #ddd;
+            border-bottom: 1px solid #ddd;
+            padding: 15px 0;
+            margin-bottom: 20px;
+        }
+
+        .threed-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .threed-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .threed-label {
+            color: #333;
+            font-weight: 600;
+            width: 40%;
+        }
+
+        .threed-val {
+            color: #555;
+            width: 60%;
+            text-align: left;
+        }
+
+        .threed-desc {
+            text-align: center;
+            font-size: 12px;
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+
+        .input-code-group {
+            margin-bottom: 20px;
+        }
+
+        .input-code-group label {
+            display: block;
+            font-weight: 600;
+            font-size: 15px;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .input-code-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+            outline: none;
+        }
+
+        .input-code-group input:focus {
+            border-color: var(--cyan);
+        }
+
+        .btn-cyan {
+            width: 100%;
+            background-color: var(--cyan);
+            color: white;
+            border: none;
+            padding: 14px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 2px;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+
+        .threed-footer {
+            text-align: center;
+            font-size: 14px;
+            color: #333;
+            font-weight: 600;
+        }
+
+        .threed-links {
+            margin-top: 15px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .threed-links a {
+            color: var(--cyan);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        /* Mesaj Kutuları */
+        .alert {
+            padding: 12px 16px;
+            margin-bottom: 20px;
+            border-radius: 6px;
+            font-size: 14px;
+            display: none;
+        }
+
+        .alert-error {
+            background-color: #fef2f2;
+            color: #991b1b;
+            border: 1px solid #fecaca;
+        }
+
+        @media (max-width: 768px) {
+            #loginScreen {
+                flex-direction: column;
+                max-width: 400px;
+            }
+
+            .login-left {
+                display: none;
+            }
+
+            .login-right {
+                padding: 40px 30px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- 1. MODERN E-TİCARET GİRİŞ EKRANI -->
+    <div id="loginScreen">
+        <div class="login-left">
+            <!-- Removed redundant brand text as it's included in the logo -->
+            
+            <!-- User Logo Container -->
+            <div style="display: flex; justify-content: center; align-items: center; margin: auto 0;">
+                <img src="Birleşim.png" onerror="this.onerror=null; this.src='blue.png';" alt="Sekurcom Logo" style="max-width: 320px; width: 100%; height: auto; filter: drop-shadow(0 10px 15px rgba(0,0,0,0.5)); transition: transform 0.3s ease;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+            </div>
+
+
+            <div class="login-left-content">
+                <h2>Pick Up Where You Left Off</h2>
+                <p>Complete your order quickly with our secure payment infrastructure. Your data is encrypted end-to-end.</p>
+            </div>
+        </div>
+        <div class="login-right">
+            <h3>Welcome</h3>
+            <p class="subtitle">Please sign in to proceed to checkout.</p>
+            
+            <div class="social-login" id="socialLoginContainer">
+                <button type="button" class="btn-social">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+                        <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                        <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+                        <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+                    </svg>
+                    Google
+                </button>
+                <button type="button" class="btn-social">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="black" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 2C6.477 2 2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12c0-5.523-4.477-10-10-10z"/>
+                    </svg>
+                    Apple
+                </button>
+            </div>
+            
+            <div class="divider" id="socialDivider">or continue with email</div>
+
+            <div id="loginAlert" class="alert alert-error" style="display: none;"></div>
+
+            <form id="loginForm">
+                <div class="modern-input-group signup-fields">
+                    <label>Full Name</label>
+                    <input type="text" id="fullName" placeholder="John Doe">
+                </div>
+                
+                <div class="modern-input-group">
+                    <label>Email Address</label>
+                    <input type="email" id="email" value="test@Sekurcom.com" required placeholder="you@example.com">
+                </div>
+                
+                <div class="modern-input-group" id="passwordGroup">
+                    <label id="passwordLabel">Password</label>
+                    <div style="position: relative;">
+                        <input type="password" id="password" value="Password123" required placeholder="••••••••" style="padding-right: 40px; box-sizing: border-box;">
+                        <span id="togglePassword" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #64748b; display: flex; align-items: center;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-eye"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                        </span>
+                    </div>
+                    <div class="password-strength" id="pwdStrengthContainer">
+                        <div class="password-strength-bar" id="pwdStrengthBar"></div>
+                    </div>
+                    <div class="strength-text" id="pwdStrengthText">Weak</div>
+                </div>
+
+                <div class="modern-input-group signup-fields" id="confirmPasswordGroup">
+                    <label id="confirmPasswordLabel">Confirm Password</label>
+                    <div style="position: relative;">
+                        <input type="password" id="confirmPassword" placeholder="••••••••">
+                    </div>
+                </div>
+
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: -10px; margin-bottom: 25px;">
+                    <div class="remember-me" id="rememberMeContainer" style="display: flex; align-items: center; gap: 8px;">
+                        <input type="checkbox" id="remember" style="width: 16px; height: 16px; margin: 0; cursor: pointer;">
+                        <label for="remember" style="font-size: 13px; color: #475569; cursor: pointer;">Remember me</label>
+                    </div>
+                    <div class="forgot-password" id="forgotPasswordContainer" style="margin: 0;">
+                        <a href="#" id="forgotPasswordLink">Forgot password?</a>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-modern" id="submitBtn">Sign In</button>
+
+                <div style="text-align: center; margin-top: 20px; font-size: 14px; color: var(--text-muted);">
+                    <span id="toggleText">Don't have an account?</span> 
+                    <a href="#" id="toggleModeBtn" style="color: var(--primary); font-weight: 600; text-decoration: none;">Sign Up</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 2. ZİRAAT BANKASI SANAL POS EKRANI -->
+    <div id="posScreen">
+        <div class="ziraat-header">
+            <h1>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10" fill="white" stroke="none"></circle>
+                    <path d="M8 12h8m-4-4v8" stroke="#E1001A"></path>
+                </svg>
+                National Bank
+            </h1>
+        </div>
+        <div class="pos-body">
+
+            <div class="merchant-info">
+                Merchant
+                <strong>Sekurcom</strong>
+            </div>
+
+            <div class="amount-display">
+                <span>TOTAL AMOUNT</span>
+                <span class="price">$150.50</span>
+            </div>
+
+            <div id="posAlert" class="alert alert-error" style="display: none;"></div>
+
+            <form id="paymentForm">
+                <div class="modern-input-group">
+                    <label>Name on Card</label>
+                    <input type="text" id="cardName" placeholder="Full Name" value="John Doe" required
+                        autocomplete="cc-name">
+                </div>
+
+                <div class="modern-input-group">
+                    <label>Card Number</label>
+                    <input type="text" id="cardNumber" placeholder="0000 0000 0000 0000" value="1234 5678 1234 5678"
+                        maxlength="19" required autocomplete="cc-number">
+                </div>
+
+                <div class="card-row">
+                    <div class="card-col">
+                        <label
+                            style="display:block; margin-bottom:8px; font-size:13px; font-weight:500; color:#475569;">Expiry</label>
+                        <div style="display:flex; gap:10px;">
+                            <input type="text" id="month" placeholder="MM" value="12" maxlength="2" required
+                                style="width:100%; padding:12px; border:1px solid #cbd5e1; border-radius:6px; text-align:center;">
+                            <input type="text" id="year" placeholder="YY" value="26" maxlength="2" required
+                                style="width:100%; padding:12px; border:1px solid #cbd5e1; border-radius:6px; text-align:center;">
+                        </div>
+                    </div>
+                    <div class="card-col">
+                        <div class="modern-input-group" style="margin:0;">
+                            <label>CVV / CVC</label>
+                            <input type="password" id="cvv" placeholder="***" value="123" maxlength="3" required
+                                style="text-align:center;">
+                        </div>
+                    </div>
+                </div>
+
+                <input type="hidden" id="amount" value="150.50">
+
+                <button type="submit" class="btn-pay" id="btnPay">
+                    Complete Payment
+                </button>
+
+                <div class="secure-footer">
+                    <span>256-Bit SSL</span>
+                    <span>VISA</span>
+                    <span>MasterCard</span>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 3. BİREBİR ZİRAAT 3D SECURE EKRANI -->
+    <div id="threeDSecureModal">
+        <div class="threed-content">
+
+            <div class="threed-topbar">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="19" y1="12" x2="5" y2="12"></line>
+                    <polyline points="12 19 5 12 12 5"></polyline>
+                </svg>
+                Secure Payment - 3D
+                <div class="ssl-lock">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#00a859" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                    </svg>
+                    SSL secured
+                </div>
+            </div>
+
+            <div class="threed-logos">
+                <div class="logo-guvenli">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="var(--cyan)">
+                        <circle cx="12" cy="12" r="10" />
+                    </svg>
+                    SECURE PAY
+                </div>
+                <div class="logo-ziraat">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#E1001A" stroke-width="3"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                        <path d="M2 17l10 5 10-5"></path>
+                        <path d="M2 12l10 5 10-5"></path>
+                    </svg>
+                    National Bank
+                </div>
+            </div>
+
+            <div class="threed-body">
+                <h2>Enter verification code</h2>
+
+                <div class="threed-table">
+                    <div class="threed-row">
+                        <span class="threed-label">Merchant:</span>
+                        <span class="threed-val">Sekurcom</span>
+                    </div>
+                    <div class="threed-row">
+                        <span class="threed-label">Amount:</span>
+                        <span class="threed-val">$150.50</span>
+                    </div>
+                    <div class="threed-row">
+                        <span class="threed-label">Date & Time:</span>
+                        <span class="threed-val" id="currentDateSpan">22.12.2024 - 13:51</span>
+                    </div>
+                    <div class="threed-row">
+                        <span class="threed-label">Card Number:</span>
+                        <span class="threed-val">XXXX XXXX XXXX 5678</span>
+                    </div>
+                </div>
+
+                <form id="threeDForm">
+                    <p class="threed-desc">
+                        Your code has been sent to your registered phone number.<br>
+                        Reference no: ASJNJQWW
+                    </p>
+
+                    <div class="input-code-group">
+                        <label>Verification Code</label>
+                        <input type="text" id="smsCode" required autocomplete="off">
+                    </div>
+
+                    <button type="submit" class="btn-cyan" id="btnVerify">Verify</button>
+
+                    <div class="threed-footer">
+                        Time Remaining: 2:52
+                        <div class="threed-links">
+                            <a href="javascript:window.location.reload();">Cancel Transaction</a>
+                            <a href="#">Help</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Uygulama Mantığı (JavaScript) -->
+    <script>
+        const API_BASE = window.location.origin + '/api';
+
+        // Tarihi ayarla
+        const now = new Date();
+        const dateStr = now.toLocaleDateString('en-US', { day: '2-digit', month: '2-digit', year: 'numeric' });
+        const timeStr = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+        document.getElementById('currentDateSpan').textContent = `${dateStr} - ${timeStr}`;
+
+        // Ekranlar
+        const loginScreen = document.getElementById('loginScreen');
+        const posScreen = document.getElementById('posScreen');
+        const threeDSecureModal = document.getElementById('threeDSecureModal');
+
+        const loginForm = document.getElementById('loginForm');
+        const paymentForm = document.getElementById('paymentForm');
+        const threeDForm = document.getElementById('threeDForm');
+
+        const loginAlert = document.getElementById('loginAlert');
+        const posAlert = document.getElementById('posAlert');
+
+        let tempOrderId = null;
+
+        function showAlert(element, message) {
+            element.textContent = message;
+            element.style.display = 'block';
+            setTimeout(() => { element.style.display = 'none'; }, 5000);
+        }
+
+        // 1. GİRİŞ VE KAYIT ADIMI
+        let currentMode = 'LOGIN'; // 'LOGIN', 'SIGNUP', 'FORGOT'
+
+        const toggleModeBtn = document.getElementById('toggleModeBtn');
+        const formTitle = document.querySelector('.login-right h3');
+        const formSubtitle = document.querySelector('.login-right p.subtitle');
+        const submitBtn = document.getElementById('submitBtn');
+        const toggleText = document.getElementById('toggleText');
+        const signupFields = document.querySelectorAll('.signup-fields');
+        const pwdStrengthContainer = document.getElementById('pwdStrengthContainer');
+        const pwdStrengthText = document.getElementById('pwdStrengthText');
+        const rememberMeContainer = document.getElementById('rememberMeContainer');
+        const forgotPasswordContainer = document.getElementById('forgotPasswordContainer');
+        const passwordInput = document.getElementById('password');
+        const togglePassword = document.getElementById('togglePassword');
+        
+        const setMode = (mode) => {
+            currentMode = mode;
+            loginAlert.style.display = 'none';
+
+            const socialLoginContainer = document.getElementById('socialLoginContainer');
+            const socialDivider = document.getElementById('socialDivider');
+            const confirmPasswordGroup = document.getElementById('confirmPasswordGroup');
+            const passwordLabel = document.getElementById('passwordLabel');
+            const confirmPasswordLabel = document.getElementById('confirmPasswordLabel');
+
+            if (mode === 'LOGIN') {
+                formTitle.textContent = 'Welcome';
+                formSubtitle.textContent = 'Please sign in to proceed to checkout.';
+                submitBtn.textContent = 'Sign In';
+                toggleText.textContent = "Don't have an account?";
+                toggleModeBtn.textContent = 'Sign Up';
+                passwordLabel.textContent = 'Password';
+                
+                signupFields.forEach(f => f.style.display = 'none');
+                pwdStrengthContainer.style.display = 'none';
+                pwdStrengthText.style.display = 'none';
+                rememberMeContainer.style.display = 'flex';
+                forgotPasswordContainer.style.display = 'block';
+                if (socialLoginContainer) socialLoginContainer.style.display = 'flex';
+                if (socialDivider) socialDivider.style.display = 'flex';
+                if (confirmPasswordGroup) confirmPasswordGroup.classList.add('signup-fields');
+                
+            } else if (mode === 'SIGNUP') {
+                formTitle.textContent = 'Sign Up';
+                formSubtitle.textContent = 'Create a new account to start shopping securely.';
+                submitBtn.textContent = 'Create Account';
+                toggleText.textContent = 'Already have an account?';
+                toggleModeBtn.textContent = 'Sign In';
+                passwordLabel.textContent = 'Password';
+                if (confirmPasswordLabel) confirmPasswordLabel.textContent = 'Confirm Password';
+                
+                signupFields.forEach(f => f.style.display = 'block');
+                pwdStrengthContainer.style.display = 'block';
+                pwdStrengthText.style.display = 'block';
+                rememberMeContainer.style.display = 'none';
+                forgotPasswordContainer.style.display = 'none';
+                if (socialLoginContainer) socialLoginContainer.style.display = 'flex';
+                if (socialDivider) socialDivider.style.display = 'flex';
+                if (confirmPasswordGroup) confirmPasswordGroup.classList.add('signup-fields');
+                
+                if (passwordInput) passwordInput.dispatchEvent(new Event('input'));
+            } else if (mode === 'FORGOT') {
+                formTitle.textContent = 'Reset Password';
+                formSubtitle.textContent = 'Enter your email and a new password to reset it.';
+                submitBtn.textContent = 'Update Password';
+                toggleText.textContent = 'Remember your password?';
+                toggleModeBtn.textContent = 'Sign In';
+                passwordLabel.textContent = 'New Password';
+                if (confirmPasswordLabel) confirmPasswordLabel.textContent = 'Confirm New Password';
+                
+                signupFields.forEach(f => f.style.display = 'none');
+                if (confirmPasswordGroup) {
+                    confirmPasswordGroup.style.display = 'block';
+                    confirmPasswordGroup.classList.remove('signup-fields');
+                }
+                
+                pwdStrengthContainer.style.display = 'block';
+                pwdStrengthText.style.display = 'block';
+                rememberMeContainer.style.display = 'none';
+                forgotPasswordContainer.style.display = 'none';
+                if (socialLoginContainer) socialLoginContainer.style.display = 'none';
+                if (socialDivider) socialDivider.style.display = 'none';
+                
+                if (passwordInput) passwordInput.dispatchEvent(new Event('input'));
+            }
+        };
+
+        if (toggleModeBtn) {
+            toggleModeBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                setMode(currentMode === 'LOGIN' ? 'SIGNUP' : 'LOGIN');
+            });
+        }
+        
+        const forgotPasswordLink = document.getElementById('forgotPasswordLink');
+        if (forgotPasswordLink) {
+            forgotPasswordLink.addEventListener('click', (e) => {
+                e.preventDefault();
+                setMode('FORGOT');
+            });
+        }
+        
+        if (passwordInput) {
+            passwordInput.addEventListener('input', function() {
+                if(currentMode === 'LOGIN') return;
+                const val = this.value;
+                const bar = document.getElementById('pwdStrengthBar');
+                const txt = document.getElementById('pwdStrengthText');
+                
+                let strength = 0;
+                if(val.length > 5) strength += 1;
+                if(val.length > 8) strength += 1;
+                if(/[A-Z]/.test(val)) strength += 1;
+                if(/[0-9]/.test(val)) strength += 1;
+                if(/[^A-Za-z0-9]/.test(val)) strength += 1;
+                
+                if(val.length === 0) {
+                    bar.style.width = '0%';
+                    txt.textContent = '';
+                } else if(strength < 2) {
+                    bar.style.width = '33%';
+                    bar.style.backgroundColor = '#ef4444';
+                    txt.textContent = 'Weak';
+                    txt.style.color = '#ef4444';
+                } else if(strength < 4) {
+                    bar.style.width = '66%';
+                    bar.style.backgroundColor = '#eab308';
+                    txt.textContent = 'Medium';
+                    txt.style.color = '#eab308';
+                } else {
+                    bar.style.width = '100%';
+                    bar.style.backgroundColor = '#22c55e';
+                    txt.textContent = 'Strong';
+                    txt.style.color = '#22c55e';
+                }
+            });
+        }
+        
+        if (togglePassword) {
+            togglePassword.addEventListener('click', function () {
+                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordInput.setAttribute('type', type);
+                
+                if (type === 'password') {
+                    this.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-eye"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>';
+                } else {
+                    this.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-eye-off"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>';
+                }
+            });
+        }
+
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            if (currentMode !== 'LOGIN') {
+                if (currentMode === 'SIGNUP') {
+                    const fullName = document.getElementById('fullName').value.trim();
+                    if (!fullName) {
+                        loginAlert.className = 'alert alert-error';
+                        loginAlert.style.backgroundColor = '#fef2f2';
+                        loginAlert.style.color = '#991b1b';
+                        loginAlert.style.borderColor = '#fecaca';
+                        showAlert(loginAlert, 'Please enter your full name.');
+                        return;
+                    }
+                }
+                
+                const confirmPassword = document.getElementById('confirmPassword').value;
+                if (password !== confirmPassword) {
+                    loginAlert.className = 'alert alert-error';
+                    loginAlert.style.backgroundColor = '#fef2f2';
+                    loginAlert.style.color = '#991b1b';
+                    loginAlert.style.borderColor = '#fecaca';
+                    showAlert(loginAlert, 'Passwords do not match.');
+                    return;
+                }
+            }
+
+            const btn = loginForm.querySelector('button[type="submit"]');
+            const originalText = btn.textContent;
+            btn.disabled = true;
+            btn.textContent = currentMode === 'LOGIN' ? 'Signing in...' : (currentMode === 'SIGNUP' ? 'Signing up...' : 'Updating...');
+
+            if (currentMode === 'FORGOT') {
+                // Mockup delay for Forgot Password
+                setTimeout(() => {
+                    loginAlert.className = 'alert';
+                    loginAlert.style.backgroundColor = '#dcfce7';
+                    loginAlert.style.color = '#166534';
+                    loginAlert.style.borderColor = '#bbf7d0';
+                    showAlert(loginAlert, 'Password updated successfully! You can now sign in.');
+                    
+                    setMode('LOGIN');
+                    document.getElementById('password').value = '';
+                    document.getElementById('confirmPassword').value = '';
+                    
+                    btn.disabled = false;
+                    btn.textContent = 'Sign In';
+                }, 1500);
+                return;
+            }
+
+            try {
+                const endpoint = currentMode === 'LOGIN' ? `${API_BASE}/Auth/login` : `${API_BASE}/Auth/register`;
+                const res = await fetch(endpoint, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const data = await res.json();
+
+                if (res.ok) {
+                    if (currentMode === 'LOGIN') {
+                        localStorage.setItem('token', data.token);
+                        loginAlert.className = 'alert';
+                        loginAlert.style.backgroundColor = '#dcfce7';
+                        loginAlert.style.color = '#166534';
+                        loginAlert.style.borderColor = '#bbf7d0';
+                        showAlert(loginAlert, data.mesaj + ' Redirecting...');
+                        
+                        const isAdmin = data.yetkiler && data.yetkiler.includes('Admin');
+                        setTimeout(() => {
+                            window.location.href = isAdmin ? '/admin.html' : '/store.html';
+                        }, 1500);
+                    } else if (currentMode === 'SIGNUP') {
+                        // Kayıt başarılı
+                        loginAlert.className = 'alert';
+                        loginAlert.style.backgroundColor = '#dcfce7';
+                        loginAlert.style.color = '#166534';
+                        loginAlert.style.borderColor = '#bbf7d0';
+                        showAlert(loginAlert, 'Registration successful! You can now sign in.');
+                        
+                        setMode('LOGIN');
+                        
+                        // Şifre alanını temizle ki kullanıcı tekrar girmeye zorlansın
+                        document.getElementById('password').value = '';
+                        document.getElementById('fullName').value = '';
+                        document.getElementById('confirmPassword').value = '';
+                    }
+                } else {
+                    loginAlert.className = 'alert alert-error';
+                    loginAlert.style.backgroundColor = '#fef2f2';
+                    loginAlert.style.color = '#991b1b';
+                    loginAlert.style.borderColor = '#fecaca';
+                    let errorMsg = 'Operation failed.';
+                    if (data.mesaj) {
+                        errorMsg = data.mesaj;
+                    } else if (Array.isArray(data)) {
+                        errorMsg = data.map(err => err.description).join(', ');
+                    }
+                    showAlert(loginAlert, errorMsg);
+                }
+            } catch (err) {
+                showAlert(loginAlert, 'Could not connect to server.');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = currentMode === 'LOGIN' ? 'Sign In' : (currentMode === 'SIGNUP' ? 'Create Account' : 'Update Password');
+            }
+        });
+
+        // Kart numarası formatlayıcı
+        document.getElementById('cardNumber').addEventListener('input', function (e) {
+            let target = e.target;
+            let value = target.value.replace(/\D/g, '').substring(0, 16);
+            if (value !== '') {
+                value = value.match(/.{1,4}/g).join(' ');
+            }
+            target.value = value;
+        });
+
+        // 2. ÖDEME ADIMI (Ziraat Pos)
+        paymentForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const token = localStorage.getItem('token');
+            if (!token) {
+                showAlert(posAlert, 'Session expired. Please sign in again.');
+                return;
+            }
+
+            const btnPay = document.getElementById('btnPay');
+            const originalContent = btnPay.innerHTML;
+            btnPay.disabled = true;
+            btnPay.innerHTML = 'Processing...';
+
+            const payload = {
+                cardHolderName: document.getElementById('cardName').value,
+                cardNumber: document.getElementById('cardNumber').value.replace(/\s/g, ''),
+                expireMonth: document.getElementById('month').value,
+                expireYear: document.getElementById('year').value,
+                cvv: document.getElementById('cvv').value,
+                amount: parseFloat(document.getElementById('amount').value)
+            };
+
+            try {
+                const res = await fetch(`${API_BASE}/payment/payments`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                const data = await res.json();
+
+                if (res.ok || res.status === 201) {
+                    tempOrderId = data.orderId;
+                    threeDSecureModal.style.display = 'flex';
+                    setTimeout(() => document.getElementById('smsCode').focus(), 100);
+                } else {
+                    showAlert(posAlert, (data.mesaj || data.title || 'Transaction declined by the bank.'));
+                }
+            } catch (err) {
+                showAlert(posAlert, 'Banking system is currently unavailable.');
+            } finally {
+                btnPay.disabled = false;
+                btnPay.innerHTML = originalContent;
+            }
+        });
+
+        // 3. 3D SECURE ONAY ADIMI
+        threeDForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const btnVerify = document.getElementById('btnVerify');
+            btnVerify.disabled = true;
+            btnVerify.textContent = 'Processing...';
+
+            // Simülasyon
+            setTimeout(() => {
+                threeDSecureModal.style.display = 'none';
+
+                posScreen.innerHTML = `
+                    <div style="padding: 40px; text-align: center;">
+                        <h2 style="color: #16a34a; margin-bottom: 10px;">Transaction Successful</h2>
+                        <p style="color: #64748b; font-size: 14px; margin-bottom: 20px;">Your payment has been received successfully.</p>
+                        <div style="background: #f8fafc; padding: 15px; border-radius: 6px; border: 1px solid #e2e8f0; font-size: 13px;">
+                            <strong>Reference No:</strong> ${tempOrderId || 'TRX-123456789'}
+                        </div>
+                        <button onclick="window.location.reload()" style="margin-top:20px; padding: 10px 20px; background: #1e293b; color: white; border: none; border-radius: 4px; cursor: pointer;">Go Back</button>
+                    </div>
+                `;
+            }, 1500);
+        });
+    </script>
+</body>
+
+</html>
