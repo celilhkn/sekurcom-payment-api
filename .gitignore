@@ -1,5 +1,9 @@
 ## .NET / ASP.NET Core
 
+# AI tooling and IDE-specific files
+.agents/
+.vscode/
+
 # Build outputs
 bin/
 obj/
