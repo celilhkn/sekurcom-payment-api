@@ -4,6 +4,30 @@ A backend payment infrastructure built with ASP.NET Core (.NET 10) that integrat
 
 ---
 
+## Screenshots
+
+![Overview](docs/screenshots/Collage.png)
+
+### Store & Login
+| | |
+|---|---|
+| ![Store](docs/screenshots/Store.png) | ![Login](docs/screenshots/Login.png) |
+
+### Payment Flow
+| Payment Form | 3D Secure SMS | Success | Fail |
+|---|---|---|---|
+| ![Payment](docs/screenshots/Payment.png) | ![SMS](docs/screenshots/SMSCode.png) | ![Success](docs/screenshots/PaymentSuccessful.png) | ![Fail](docs/screenshots/PaymentFail.png) |
+
+### Admin Panel & API
+| | |
+|---|---|
+| ![Admin Dashboard](docs/screenshots/AdminPanel.png) | ![Swagger](docs/screenshots/Swagger.png) |
+
+### System Architecture
+![Flow Chart](docs/screenshots/FlowChart.png)
+
+---
+
 ## What it does
 
 The API handles the full lifecycle of a payment: a customer browses products, goes through a 3D Secure challenge (handled by Iyzico), the bank sends an async callback, the system finalizes the transaction, and the admin can view stats, issue refunds or export everything to Excel. A static HTML/JS frontend is included to demonstrate the complete flow end-to-end.
